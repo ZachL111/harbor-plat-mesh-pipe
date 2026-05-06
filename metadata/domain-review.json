@@ -1,0 +1,73 @@
+{
+  "repo": "harbor-plat-mesh-pipe",
+  "language": "Java",
+  "category": "Platform engineering",
+  "goal": "Package a Java local lab for mesh analysis with safe and unsafe fixtures, remediation hints, and documented operating limits.",
+  "review_model": {
+    "terms": [
+      "rollout width",
+      "quota pressure",
+      "route drift",
+      "secret scope"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "rollout width",
+      "signal": 48,
+      "slack": 52,
+      "drag": 19,
+      "confidence": 49,
+      "score": 140,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "quota pressure",
+      "signal": 64,
+      "slack": 22,
+      "drag": 16,
+      "confidence": 58,
+      "score": 160,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "route drift",
+      "signal": 74,
+      "slack": 44,
+      "drag": 11,
+      "confidence": 73,
+      "score": 232,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "secret scope",
+      "signal": 73,
+      "slack": 45,
+      "drag": 13,
+      "confidence": 89,
+      "score": 241,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "rollout width",
+      "signal": 70,
+      "slack": 23,
+      "drag": 32,
+      "confidence": 56,
+      "score": 123,
+      "lane": "watch"
+    }
+  ]
+}

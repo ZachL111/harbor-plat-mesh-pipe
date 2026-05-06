@@ -1,68 +1,40 @@
 # harbor-plat-mesh-pipe
 
-`harbor-plat-mesh-pipe` is a Java project for Platform engineering. It turns package a Java local lab for mesh analysis with safe and unsafe fixtures, remediation hints, and documented operating limits into a small local model with readable fixtures and a direct verification command.
+`harbor-plat-mesh-pipe` is a Java project in platform engineering. Its focus is to package a Java local lab for mesh analysis with safe and unsafe fixtures, remediation hints, and documented operating limits.
 
-## Reading Harbor Plat Mesh Pipe
+## Problem It Tries To Make Smaller
 
-Start with the README, then open `metadata/project.json` to check the constants behind the examples. After that, `fixtures/cases.csv` shows the compact path and `examples/extended_cases.csv` gives a wider look at the same rule.
+I want this repository to be useful as a quick reading exercise: fixtures first, implementation second, verifier last.
 
-## Purpose
+## Harbor Plat Mesh Pipe Review Notes
 
-This is not a wrapper around a service. It is a self-contained project that shows how the model behaves when demand, capacity, latency, risk, and weight move in different directions.
+The first comparison I would make is `secret scope` against `rollout width` because it shows where the rule is most opinionated.
 
-## Design Sketch
+## Working Pieces
 
-The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying platform engineering behavior without needing a service or database unless the language project itself is SQL. The Java implementation uses a compact package layout and direct assertion checks.
+- `fixtures/domain_review.csv` adds cases for rollout width and quota pressure.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/harbor-plat-mesh-walkthrough.md` walks through the case spread.
+- The Java code includes a review path for `secret scope` and `rollout width`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Fixture Notes
+## Design Notes
 
-The extended cases are not random smoke tests. `degraded` keeps pressure on the review path, while `surge` shows the model when capacity and weight are strong enough to clear the threshold.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## What It Does
+The Java code keeps the review rule close to the tests.
 
-- Uses fixture data to keep route policy changes visible in code review.
-- Includes extended examples for rollout constraints, including `surge` and `degraded`.
-- Documents environment checks tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-
-## Setup
-
-Install Java and run the commands from the repository root. The project does not need credentials or a hosted service.
-
-## Verification
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
-
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Files Worth Reading
-
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Limits
-
-The repository favors determinism over breadth. It does not pull live data, keep secrets, or depend on network access for verification.
-
-## Next Directions
-
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add one more platform engineering fixture that focuses on a malformed or borderline input.
-
-## Usage
+## Example Run
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Tests
+
+The check exercises the source code and the review fixture. `recovery` is the high score at 241; `stale` is the low score at 123.
+
+## Known Limits
+
+The fixture set is small enough to audit by hand. The next useful expansion is malformed input coverage, not extra surface area.
